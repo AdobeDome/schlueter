@@ -7078,5 +7078,19 @@
         "condition": { "==": [{ "var": "enableSubmitAction" }, true] }
       }
     ]
-  }
+  },
+  {
+      "id": "shoppable-banner",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "asset",
+          "value": "",
+          "label": "Asset",
+          "description": "Scene7 asset path, e.g. DominikCo/trendline_1260x708",
+          "required": true
+        }
+      ]
+    }
 ]
