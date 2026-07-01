@@ -20,6 +20,9 @@
       "dynamic-media-image",
       "dynamic-media-video",
       "fragment",
+      "fragment-list",
+      "forex",
+      "find-a-doctor",
       "hero",
       "image",
       "promotion",
@@ -34,9 +37,7 @@
       "shoppable-banner",
       "tabs",
       "form",
-      "forex",
-      "embed-adaptive-form",
-      "find-a-doctor"
+      "embed-adaptive-form"
     ]
   },
   {
