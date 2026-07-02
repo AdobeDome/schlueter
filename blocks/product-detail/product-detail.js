@@ -12,13 +12,12 @@ const PRODUCTS_FROM_FOLDER_ENDPOINT = "https://publish-p131074-e1277685.adobeaem
 async function fetchProductByPath(path) {
   try {
     if (!path) return null;
+    // Cache-bust via query param instead of Cache-Control/Pragma headers: those headers
+    // trigger a CORS preflight that this endpoint's Access-Control-Allow-Headers rejects.
     const url = `${PRODUCT_BY_PATH_ENDPOINT};path=${path};timestamp=${Date.now()}`;
     const resp = await fetch(url, {
       method: "GET",
-      headers: {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-      },
+      headers: { Accept: "application/json" },
     });
     if (!resp.ok) throw new Error(`HTTP error! status: ${resp.status}`);
     const json = await resp.json();
@@ -43,10 +42,7 @@ async function fetchProductsFromFolder(folderPath) {
     const url = `${PRODUCTS_FROM_FOLDER_ENDPOINT};path=${folderPath};timestamp=${Date.now()}`;
     const resp = await fetch(url, {
       method: "GET",
-      headers: {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-      },
+      headers: { Accept: "application/json" },
     });
     if (!resp.ok) throw new Error(`HTTP error! status: ${resp.status}`);
     const json = await resp.json();
