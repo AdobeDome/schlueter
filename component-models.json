@@ -7080,6 +7080,206 @@
     ]
   },
   {
+    "id": "product-card",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "contentFragmentFolder",
+        "label": "Content Fragment Folder",
+        "description": "Select folder containing particular product content fragments",
+        "valueType": "string",
+        "validation": {
+          "rootPath": "/content/dam"
+        }
+      },
+      {
+        "component": "select",
+        "name": "layout",
+        "label": "Layout",
+        "valueType": "string",
+        "value": "stacked",
+        "options": [
+          {
+            "name": "Stacked",
+            "value": "stacked"
+          },
+          {
+            "name": "Compact Stacked Card",
+            "value": "compact-stacked-card"
+          },
+          {
+            "name": "Side by Side",
+            "value": "side-by-side"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "name": "buttonText",
+        "label": "Button Text",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Button Link",
+        "description": "Button link for entire card"
+      },
+      {
+        "component": "select",
+        "name": "ctastyle",
+        "label": "CTA Style",
+        "valueType": "string",
+        "value": "button",
+        "options": [
+          {
+            "name": "Primary Button",
+            "value": "button"
+          },
+          {
+            "name": "Secondary Button",
+            "value": "button-secondary"
+          },
+          {
+            "name": "Dark Button",
+            "value": "button-dark"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "alignment",
+        "label": "Alignment",
+        "options": [
+          {
+            "name": "Left",
+            "value": "left"
+          },
+          {
+            "name": "Center",
+            "value": "center"
+          },
+          {
+            "name": "Right",
+            "value": "right"
+          }
+        ]
+      },
+      {
+        "component": "boolean",
+        "name": "hideDescription",
+        "label": "Hide Description",
+        "value": "false",
+        "valueType": "boolean"
+      },
+      {
+        "component": "boolean",
+        "name": "addBorder",
+        "label": "Add Border",
+        "value": "false",
+        "valueType": "boolean"
+      },
+      {
+        "component": "text",
+        "name": "buttoneventtype",
+        "label": "Button Event Type",
+        "value": "",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "custom-class",
+        "label": "Custom class",
+        "value": "",
+        "valueType": "string",
+        "description": "Space-separated class names to add to the block"
+      }
+    ]
+  },
+  {
+    "id": "product-detail",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "folder",
+        "label": "Product Folder",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/dam"
+      },
+      {
+        "component": "boolean",
+        "name": "showaddtowishlistbutton",
+        "label": "Show Add To Wishlist Button",
+        "value": "true",
+        "valueType": "boolean",
+        "description": "When disabled, Add to Cart and Add to Wishlist buttons are not rendered."
+      },
+      {
+        "component": "boolean",
+        "name": "showyoumayalsolikesection",
+        "label": "Show Related Products Section",
+        "value": "true",
+        "valueType": "boolean",
+        "description": "When disabled, the Related Products section is not rendered."
+      },
+      {
+        "component": "text",
+        "name": "relatedproductstitle",
+        "label": "Heading for Related Products section",
+        "value": "YOU MAY ALSO LIKE",
+        "valueType": "string",
+        "description": "Authored heading will be displayed as a title of the Related Product Section."
+      },
+      {
+        "component": "aem-content",
+        "name": "pd-recommended-path",
+        "label": "Recommended Product Detail Page Path",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "custom-class",
+        "label": "Custom class",
+        "value": "",
+        "valueType": "string",
+        "description": "Space-separated class names to add to the block"
+      },
+      {
+        "component": "boolean",
+        "name": "showextras",
+        "label": "Show Extras",
+        "value": "false",
+        "valueType": "boolean",
+        "description": "When enabled, an extras section with checkboxes will be shown based on the options authored below."
+      },
+      {
+        "component": "text",
+        "name": "extraoptions",
+        "label": "Extra Options",
+        "multi": true,
+        "valueType": "string[]",
+        "description": "If the extra options are enabled, the authored values will be shown as the extras in the UI."
+      },
+      {
+        "component": "boolean",
+        "name": "showquantity",
+        "label": "Show Quantity Dropdown",
+        "value": "false",
+        "valueType": "boolean",
+        "description": "When enabled, a quantity dropdown will be shown."
+      },
+      {
+        "component": "number",
+        "name": "maxquantity",
+        "label": "Quantity Options",
+        "valueType": "number",
+        "value": 1,
+        "description": "The number of quantity options to be shown from when adding to cart. The dropdown will be populated with values starting from 1 and ends on the number that is authored."
+      }
+    ]
+  },
+  {
       "id": "shoppable-banner",
       "fields": [
         {
