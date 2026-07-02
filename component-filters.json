@@ -25,6 +25,7 @@
       "find-a-doctor",
       "hero",
       "image",
+      "new-arrival",
       "product-card",
       "product-detail",
       "promotion",
@@ -113,5 +114,9 @@
       "wizard",
       "range"
     ]
+  },
+  {
+    "id": "new-arrival",
+    "components": []
   }
 ]

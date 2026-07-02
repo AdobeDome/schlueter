@@ -7080,6 +7080,57 @@
     ]
   },
   {
+    "id": "new-arrival",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "folder",
+        "label": "Products Folder (Content Fragments)",
+        "multi": false,
+        "validation": { "rootPath": "/content/dam" }
+      },
+      {
+        "component": "text",
+        "name": "skus",
+        "label": "Product SKUs",
+        "valueType": "string[]",
+        "multi": true,
+        "description": "The content fragment name of each product to show, e.g. reno-tk"
+      },
+      {
+        "component": "select",
+        "name": "layout",
+        "label": "Layout",
+        "valueType": "string",
+        "value": "horizontal",
+        "options": [
+          {
+            "name": "Horizontal (Carousel)",
+            "value": "horizontal"
+          },
+          {
+            "name": "Vertical (Grid)",
+            "value": "vertical"
+          }
+        ]
+      },
+      {
+        "component": "aem-content",
+        "name": "na-recommended-path",
+        "label": "Product Detail Page Path",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "custom-class",
+        "label": "Custom class",
+        "value": "",
+        "valueType": "string",
+        "description": "Space-separated class names to add to the block"
+      }
+    ]
+  },
+  {
     "id": "product-card",
     "fields": [
       {
