@@ -1,6 +1,7 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 
 const PRODUCT_BY_PATH_ENDPOINT = 'https://publish-p131074-e1277685.adobeaemcloud.com/graphql/execute.json/ref-demo-eds/GetProductByPath';
+const PRODUCTS_FROM_FOLDER_ENDPOINT = 'https://publish-p131074-e1277685.adobeaemcloud.com/graphql/execute.json/ref-demo-eds/GetProductsFromFolder';
 
 function revealProductCardWrapper(block) {
   const wrapperElement = block.closest('.product-card-wrapper');
@@ -21,24 +22,53 @@ function normalizeContentFragmentPath(rawPath) {
   return path;
 }
 
+function mapRawProduct(rawProduct) {
+  if (!rawProduct) return null;
+  return {
+    id: rawProduct.sku,
+    name: rawProduct.name,
+    description: rawProduct.highlight || rawProduct.description?.html || '',
+    sku: rawProduct.sku,
+  };
+}
+
+async function fetchProductByPath(path) {
+  const url = `${PRODUCT_BY_PATH_ENDPOINT};path=${path};timestamp=${Date.now()}`;
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  });
+  if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+  const payload = await response.json();
+  return payload?.data?.productModelByPath?.item || null;
+}
+
+async function fetchFirstProductFromFolder(folderPath) {
+  const url = `${PRODUCTS_FROM_FOLDER_ENDPOINT};path=${folderPath}`;
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  });
+  if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+  const payload = await response.json();
+  const items = payload?.data?.productModelList?.items || [];
+  return items[0] || null;
+}
+
 async function fetchProductData(contentFragmentPath) {
   if (!contentFragmentPath) return null;
   try {
-    const url = `${PRODUCT_BY_PATH_ENDPOINT};path=${contentFragmentPath};timestamp=${Date.now()}`;
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-    });
-    if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
-    const payload = await response.json();
-    const rawProduct = payload?.data?.productModelByPath?.item;
-    if (!rawProduct) return null;
-    return {
-      id: rawProduct.sku,
-      name: rawProduct.name,
-      description: rawProduct.highlight || rawProduct.description?.html || '',
-      sku: rawProduct.sku,
-    };
+    // The configured path may point directly at a product fragment...
+    const rawProduct = await fetchProductByPath(contentFragmentPath);
+    if (rawProduct) return mapRawProduct(rawProduct);
+  } catch (error) {
+    /* eslint-disable-next-line no-console */
+    console.warn('Product card: path is not a content fragment, trying as a folder', error);
+  }
+  try {
+    // ...or at a folder containing product fragments, in which case show the first one.
+    const rawProduct = await fetchFirstProductFromFolder(contentFragmentPath);
+    return mapRawProduct(rawProduct);
   } catch (error) {
     /* eslint-disable-next-line no-console */
     console.error('Product card API fetch failed', error);
