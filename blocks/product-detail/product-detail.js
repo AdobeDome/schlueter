@@ -59,6 +59,18 @@ async function fetchProductsFromFolder(folderPath) {
 }
 
 /**
+ * The product identifier is the content fragment's own name (e.g. "reno-tk"
+ * for /content/dam/.../products/reno-tk), not the "sku" field in its data.
+ * @param {string} path - Content fragment path
+ * @returns {string} - Content fragment name
+ */
+function getProductSlug(path) {
+  if (!path) return "";
+  const segments = String(path).split("/").filter(Boolean);
+  return segments[segments.length - 1] || "";
+}
+
+/**
  * Get query parameter from URL
  * @param {string} param - Parameter name
  * @returns {string|null} - Parameter value
@@ -86,13 +98,14 @@ function updatePageTitle(product) {
  * @returns {HTMLElement} - Product card
  */
 function buildRecommendationCard(item, isAuthor, recommendedPath) {
-  const { sku, name, highlight } = item || {};
+  const { name, highlight } = item || {};
+  const slug = getProductSlug(item?._path);
 
   const card = document.createElement("article");
   card.className = "pd-rec-card";
 
   // Make card clickable and redirect to product page
-  if (sku) {
+  if (slug) {
     card.style.cursor = "pointer";
     card.addEventListener("click", () => {
       const currentPath = window.location.pathname;
@@ -119,7 +132,7 @@ function buildRecommendationCard(item, isAuthor, recommendedPath) {
       const productPath = isAuthor
         ? `${basePath}${recommendedPath}.html`
         : `${basePath}${recommendedPath}`;
-      window.location.href = `${productPath}?productId=${encodeURIComponent(sku)}`;
+      window.location.href = `${productPath}?productId=${encodeURIComponent(slug)}`;
     });
   }
 
@@ -146,7 +159,8 @@ function buildRecommendationCard(item, isAuthor, recommendedPath) {
  * @returns {HTMLElement} - Product detail container
  */
 function buildProductDetail(product, eventConfig = {}) {
-  const { name, highlight, description = {}, sku } = product;
+  const { name, highlight, description = {} } = product;
+  const slug = getProductSlug(product._path);
 
   const container = document.createElement("div");
   container.className = "pd-container";
@@ -282,7 +296,7 @@ function buildProductDetail(product, eventConfig = {}) {
     addToCartBtn.addEventListener("click", () => {
       if (typeof window.addToCart === "function") {
         window.addToCart({
-          id: sku || "",
+          id: slug || "",
           name: name || "",
           description: description?.html || "",
           quantity: 1,
@@ -320,9 +334,9 @@ function buildProductDetail(product, eventConfig = {}) {
  * @returns {HTMLElement|null} - Recommendations section or null
  */
 function buildRecommendations(currentProduct, allProducts, isAuthor, recommendedPath, relatedProductsTitle) {
-  const { sku: currentSku } = currentProduct;
+  const currentSlug = getProductSlug(currentProduct._path);
 
-  const recommendations = allProducts.filter((product) => product.sku !== currentSku);
+  const recommendations = allProducts.filter((product) => getProductSlug(product._path) !== currentSlug);
 
   if (recommendations.length === 0) {
     return null;
@@ -389,8 +403,8 @@ export default async function decorate(block) {
     folderHref = folderHref.replace(/\.html$/, "");
   }
 
-  // Get SKU from URL query parameter
-  const sku = getQueryParam("productId");
+  // Get the product slug (content fragment name) from the URL query parameter
+  const productSlug = getQueryParam("productId");
 
   // Clear block content
   block.textContent = "";
@@ -404,7 +418,7 @@ export default async function decorate(block) {
     return;
   }
 
-  if (!sku) {
+  if (!productSlug) {
     const errorMsg = document.createElement("p");
     errorMsg.className = "pd-error";
     errorMsg.textContent = "Product not found. Missing product ID in URL.";
@@ -418,9 +432,9 @@ export default async function decorate(block) {
   loader.textContent = "Loading product details...";
   block.appendChild(loader);
 
-  // Fetch every product in the folder (used to resolve the current SKU's path and to build recommendations)
+  // Fetch every product in the folder (used to resolve the current product's path and to build recommendations)
   const allProducts = await fetchProductsFromFolder(folderHref);
-  const matchedProduct = allProducts.find((item) => String(item.sku) === String(sku));
+  const matchedProduct = allProducts.find((item) => getProductSlug(item._path) === productSlug);
 
   block.textContent = "";
 

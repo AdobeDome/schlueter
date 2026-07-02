@@ -22,13 +22,22 @@ function normalizeContentFragmentPath(rawPath) {
   return path;
 }
 
+// The product identifier is the content fragment's own name (e.g. "reno-tk"
+// for /content/dam/.../products/reno-tk), not the "sku" field in its data.
+function getProductSlug(path) {
+  if (!path) return '';
+  const segments = String(path).split('/').filter(Boolean);
+  return segments[segments.length - 1] || '';
+}
+
 function mapRawProduct(rawProduct) {
   if (!rawProduct) return null;
+  const slug = getProductSlug(rawProduct._path);
   return {
-    id: rawProduct.sku,
+    id: slug,
     name: rawProduct.name,
     description: rawProduct.highlight || rawProduct.description?.html || '',
-    sku: rawProduct.sku,
+    sku: slug,
   };
 }
 
