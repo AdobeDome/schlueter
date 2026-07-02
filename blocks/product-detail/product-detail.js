@@ -38,7 +38,9 @@ async function fetchProductByPath(path) {
 async function fetchProductsFromFolder(folderPath) {
   try {
     if (!folderPath) return [];
-    const url = `${PRODUCTS_FROM_FOLDER_ENDPOINT};path=${folderPath}`;
+    // Cache-bust: the AEM publish CDN caches this response without varying by Origin,
+    // so a stale cached hit can be missing the Access-Control-Allow-Origin header.
+    const url = `${PRODUCTS_FROM_FOLDER_ENDPOINT};path=${folderPath};timestamp=${Date.now()}`;
     const resp = await fetch(url, {
       method: "GET",
       headers: {
