@@ -197,32 +197,6 @@ function extractSKUs(block, cfg) {
     });
   }
 
-  // Another fallback: parse table rows manually
-  if (skuList.length === 0) {
-    const rows = block.querySelectorAll(":scope > div");
-    rows.forEach((row) => {
-      const cells = row.querySelectorAll(":scope > div");
-      cells.forEach((cell) => {
-        const text = cell.textContent.trim();
-        // Filter out folder paths and empty values
-        if (
-          text &&
-          !text.toLowerCase().includes("folder") &&
-          !text.startsWith("http") &&
-          !text.startsWith("/") &&
-          !text.includes("/content/")
-        ) {
-          // Split by comma in case multiple SKUs
-          const skus = text
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean);
-          skuList.push(...skus);
-        }
-      });
-    });
-  }
-
   return skuList;
 }
 
